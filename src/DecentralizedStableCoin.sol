@@ -47,7 +47,8 @@ contract DecentralizedStableCoin is ERC20Burnable, Ownable {
     // ERC20Burnable cause we're gonna be buring tokens to maintain the pegged price
     constructor()
         // Name & Symbol
-        ERC20("DecentralizedStableCoin", "DSC")
+        // todo: edit
+        ERC20("MoonPeg", "MGP")
         // Initial owner
         Ownable()
     {}

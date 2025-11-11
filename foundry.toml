@@ -6,6 +6,7 @@ remappings = [
     "@chainlink/contracts=lib/chainlink-brownie-contracts/contracts/",
     "@openzeppelin/contracts=lib/openzeppelin-contracts/contracts",
 ]
+rpc_url = "${SEPOLIA_RPC_URL}"
 
 # For invariant fuzz testing
 [invariant]

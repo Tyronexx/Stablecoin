@@ -72,7 +72,7 @@ contract DSCEngine is ReentrancyGuard {
     // Set when we deploy the contract (i.e in constructor)
     mapping(address token => address priceFeed) private s_priceFeeds;
     /**
-     * map of user to collateral token and amount of collateral deposited
+     * map of user address to collateral token to amount of collateral deposited
      * */
     mapping(address user => mapping(address token => uint256 amount))
         private s_collateralDeposited;
@@ -198,12 +198,11 @@ contract DSCEngine is ReentrancyGuard {
         // ReentrancyGuard to prevent reentrancy attacks
         nonReentrant
     {
+        // user must approve token first
         // Deposit collateral and update state
         // This line adds amountCollateral to the deposit for the user(msg.sender) and token(tokenCollateralAddress) combination
         // s_collateralDeposited maps user address to token address to amount deposited
-        s_collateralDeposited[msg.sender][
-            tokenCollateralAddress
-        ] += amountCollateral;
+        s_collateralDeposited[msg.sender][ tokenCollateralAddress] += amountCollateral;
         // emitting event cause we're updating state
         emit CollateralDeposited(
             msg.sender,
@@ -330,12 +329,11 @@ contract DSCEngine is ReentrancyGuard {
     // This function kicks out users (using a threshold) who are too close to being undercollateralized
     // Threshold will be 150% (i.e whatever DSC amount you have * 150% = ETH/BTC $ collateral equivalent required to not get liquidated)
     // If someone pays minted DSC of users that fall below threshold (hence user has 0 debt), they can have all their collateral for a discount (i.e 'liquidate' them)
-    // This is like punishment for allowing collateral value go too low
     /**
      * @param collateral The erc20 collateral address to liquidate from the user
      * @param user The user who broke health factor. i.e _healthFactor is below MIN_HEALTH_FACTOR
      * @param debtToCover Amount of DSC to burn to improve user health factor
-     * @notice You can partially liauidate a user
+     * @notice You can partially liquidate a user
      * @notice You will get a liquidation bonus for taking the users funds
      * @notice This function working assumes the protocol will be roughly 200% overcollaterized in order for this to work
      * @notice A known bug would be if the protocol were %100 or less collaterized, then we wouldnt be able to incentivize liquidators
@@ -347,7 +345,10 @@ contract DSCEngine is ReentrancyGuard {
         address collateral,
         address user,
         uint256 debtToCover
-    ) external moreThanZero(debtToCover) nonReentrant {
+    ) external moreThanZero(debtToCover) nonReentrant isAllowedToken(collateral) {
+        // check that user has dsc minted or revert early
+        require(s_DSCMinted[user] > 0, "User has no debt");
+
         // check health factor of user at beginning
         uint256 startingUserHealthFactor = _healthFactor(user);
         if (startingUserHealthFactor >= MIN_HEALTH_FACTOR) {
@@ -529,7 +530,6 @@ contract DSCEngine is ReentrancyGuard {
         // check if total dsc minted is zero
         // If no dsc minted by user, then health factor is max (i.e 1e18)
         // This means that if no dsc is minted, then health factor is always healthy
-        // This is because if no dsc is minted, then there is no debt to cover
         // Hence, no need to check collateral value
         if (totalDscMinted == 0) return type(uint256).max;
 
@@ -548,7 +548,7 @@ contract DSCEngine is ReentrancyGuard {
         // 150 * 50 = 7500 / 100 = 75
         // For 100 DSC minted, that would be 75/100 = 0.75 i.e < 1 hence unhealthy
 
-        return (collateralAdjustedForThreshold * PRECISION) / totalDscMinted;
+        return (collateralAdjustedForThreshold * PRECISION) / totalDscMinted > 0 ? totalDscMinted : 1;
         // Liquidate users if this value is less than 1
         // multiply by PRECISION to get 18 decimals cause totalDscMinted is in 18 decimals
     }
@@ -607,6 +607,7 @@ contract DSCEngine is ReentrancyGuard {
     // Get collateral value of dsc(debt) to burn in liquidate fn
     // usdAmountInWei is debt to cover
     // Converts a USD-denominated debt amount into the equivalent amount of a token (like ETH, WBTC, etc.), based on the token's price feed
+    // opposite of getUsdValue
     function getTokenAmountFromUsd(
         address token,
         uint256 usdAmountInWei

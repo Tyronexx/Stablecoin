@@ -1,4 +1,14 @@
-# 🪙 Decentralized Stablecoin System (DSC)
+# MoonPeg engine: 
+**https://sepolia.etherscan.io/address/0x63AAD6F55044CEC0Fb416C054CdD79242Fd35330#writeContract**
+
+# Token contract: 
+**https://sepolia.etherscan.io/token/0x4f33109daded256700ce0e9a0a7f3eca3d97e9ca#code**
+
+### NB: You need to approve this contract to spend WETH and DAI
+##### WETH contract: [0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9](https://sepolia.etherscan.io/address/0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9#writeContract)
+##### DAI contract: [0x776b6fC2eD15D6Bb5Fc32e0c89DE68683118c62A](https://sepolia.etherscan.io/address/0x776b6fC2eD15D6Bb5Fc32e0c89DE68683118c62A#writeContract)
+
+# 🪙 Decentralized Stablecoin System (MoonPeg)
 
 A **fully on-chain**, **exogenously collateralized**, and **algorithmically stabilized** stablecoin protocol built in Solidity.  
 This system is composed of two core contracts:  
@@ -9,14 +19,14 @@ This system is composed of two core contracts:
 
 ## ⚙️ Overview
 
-The **Decentralized Stablecoin System (DSC)** is a crypto-backed, overcollateralized stablecoin protocol inspired by MakerDAO’s DAI but designed for simplicity, transparency, and extensibility.
+The **Decentralized Stablecoin System (MoonPeg)** is a crypto-backed, overcollateralized stablecoin protocol inspired by MakerDAO’s DAI but designed for simplicity, transparency, and extensibility.
 
-It maintains a soft peg to a target value (e.g. 1 USD) using **exogenous collateral** such as **ETH** and **BTC**, combined with an **algorithmic stability mechanism** governed by `DSCEngine`.
+It maintains a soft peg to a target value (e.g. 1 USD) using **exogenous collateral** such as **ETH** and **DAI**, combined with an **algorithmic stability mechanism** governed by `DSCEngine`.
 
 ## 🪄 Core Components
 
 ### 1. **DecentralizedStableCoin.sol**
-> The ERC20 implementation of the stablecoin (`DSC`), fully controlled by the `DSCEngine`.
+> The ERC20 implementation of the stablecoin (`MPG`), fully controlled by the `DSCEngine`.
 
 | Function | Description |
 |-----------|-------------|
@@ -50,7 +60,7 @@ It maintains a soft peg to a target value (e.g. 1 USD) using **exogenous collate
 ## 🧮 Stability Logic
 
 1. **Collateral Deposit:**  
-   Users lock ETH or BTC as collateral via `depositCollateral()` in DSCEngine.
+   Users lock ETH or DAI as collateral via `depositCollateral()` in DSCEngine.
 
 2. **Minting:**  
    DSCEngine mints DSC (up to a safe collateral ratio) by calling `DecentralizedStableCoin.mint()`.

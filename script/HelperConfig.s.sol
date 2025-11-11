@@ -41,11 +41,20 @@ contract HelperConfig is Script {
 
     function getSepoliaEthConfig() public view returns (NetworkConfig memory) {
         return
+            // NetworkConfig({
+            //     // todo: change wbtc price feed and wbtc token
+            //     wethUsdPriceFeed: 0x694AA1769357215DE4FAC081bf1f309aDC325306,
+            //     wbtcUsdPriceFeed: 0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063,
+            //     weth: 0xdd13E55209Fd76AfE204dBda4007C227904f0a81,
+            //     wbtc: 0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063,
+            //     deployerKey: vm.envUint("PRIVATE_KEY")
+            // });
             NetworkConfig({
+                // todo: change wbtc price feed and wbtc token
                 wethUsdPriceFeed: 0x694AA1769357215DE4FAC081bf1f309aDC325306,
-                wbtcUsdPriceFeed: 0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063,
-                weth: 0xdd13E55209Fd76AfE204dBda4007C227904f0a81,
-                wbtc: 0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063,
+                wbtcUsdPriceFeed /*DAIUSD*/: 0x14866185B1962B63C3Ea9E03Bc1da838bab34C19,
+                weth: 0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9,
+                wbtc /*DAI*/: 0x776b6fC2eD15D6Bb5Fc32e0c89DE68683118c62A,
                 deployerKey: vm.envUint("PRIVATE_KEY")
             });
     }
