@@ -4,7 +4,7 @@
 # Token contract: 
 **https://sepolia.etherscan.io/token/0x4f33109daded256700ce0e9a0a7f3eca3d97e9ca#code**
 
-### NB: You need to approve this contract to spend WETH and DAI
+### NB: You need to approve MoonPeg engine contract to spend WETH and DAI
 ##### WETH contract: [0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9](https://sepolia.etherscan.io/address/0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9#writeContract)
 ##### DAI contract: [0x776b6fC2eD15D6Bb5Fc32e0c89DE68683118c62A](https://sepolia.etherscan.io/address/0x776b6fC2eD15D6Bb5Fc32e0c89DE68683118c62A#writeContract)
 
@@ -28,12 +28,12 @@ It maintains a soft peg to a target value (e.g. 1 USD) using **exogenous collate
 ### 1. **DecentralizedStableCoin.sol**
 > The ERC20 implementation of the stablecoin (`MPG`), fully controlled by the `DSCEngine`.
 
-| Function | Description |
-|-----------|-------------|
-| `mint(address _to, uint256 _amount)` | Mints DSC to `_to`. Only callable by DSCEngine (owner). |
-| `burn(uint256 _amount)` | Burns DSC from caller’s balance to maintain peg. Only callable by DSCEngine. |
-| `balanceOf(address)` | Returns account balance. |
-| `transfer(address to, uint256 amount)` | Standard ERC20 transfer. |
+| Function                               | Description                                                                  |
+| -------------------------------------- | ---------------------------------------------------------------------------- |
+| `mint(address _to, uint256 _amount)`   | Mints DSC to `_to`. Only callable by DSCEngine (owner).                      |
+| `burn(uint256 _amount)`                | Burns DSC from caller’s balance to maintain peg. Only callable by DSCEngine. |
+| `balanceOf(address)`                   | Returns account balance.                                                     |
+| `transfer(address to, uint256 amount)` | Standard ERC20 transfer.                                                     |
 
 🔒 **Safety rules**
 - Only DSCEngine can mint/burn.  
@@ -46,14 +46,14 @@ It maintains a soft peg to a target value (e.g. 1 USD) using **exogenous collate
 ### 2. **DSCEngine.sol**
 > The protocol’s logic layer — manages collateral, user positions, and stability mechanisms.
 
-| Feature | Description |
-|----------|-------------|
-| **Collateral Management** | Accepts ETH & BTC (via wrapped tokens) as deposits. Tracks and values collateral. |
-| **Minting Control** | Users can mint DSC up to a defined collateral ratio. Prevents overleveraging. |
-| **Health Factor Calculation** | Continuously monitors account solvency via a health factor formula. |
-| **Liquidations** | Incentivizes third parties to liquidate unsafe positions to maintain solvency. |
-| **Redeem & Withdraw** | Allows users to burn DSC and redeem collateral proportionally. |
-| **Price Feeds** | Uses Chainlink oracles for reliable on-chain pricing of collateral assets. |
+| Feature                       | Description                                                                       |
+| ----------------------------- | --------------------------------------------------------------------------------- |
+| **Collateral Management**     | Accepts ETH & BTC (via wrapped tokens) as deposits. Tracks and values collateral. |
+| **Minting Control**           | Users can mint DSC up to a defined collateral ratio. Prevents overleveraging.     |
+| **Health Factor Calculation** | Continuously monitors account solvency via a health factor formula.               |
+| **Liquidations**              | Incentivizes third parties to liquidate unsafe positions to maintain solvency.    |
+| **Redeem & Withdraw**         | Allows users to burn DSC and redeem collateral proportionally.                    |
+| **Price Feeds**               | Uses Chainlink oracles for reliable on-chain pricing of collateral assets.        |
 
 ---
 
@@ -79,14 +79,14 @@ It maintains a soft peg to a target value (e.g. 1 USD) using **exogenous collate
 
 ## 🧱 Key Functions (DSCEngine)
 
-| Function | Purpose |
-|-----------|----------|
-| `depositCollateral(address token, uint256 amount)` | Deposit supported collateral. |
-| `mintDSC(uint256 amountDSC)` | Mint DSC tokens against your collateral. |
-| `redeemCollateral(address token, uint256 amount)` | Withdraw collateral by burning DSC. |
-| `liquidate(address user, address collateralToken, uint256 debtToCover)` | Liquidate undercollateralized positions. |
-| `getHealthFactor(address user)` | Returns the solvency score of a position. |
-| `getCollateralValue(address user)` | Returns the total USD value of a user’s collateral. |
+| Function                                                                | Purpose                                             |
+| ----------------------------------------------------------------------- | --------------------------------------------------- |
+| `depositCollateral(address token, uint256 amount)`                      | Deposit supported collateral.                       |
+| `mintDSC(uint256 amountDSC)`                                            | Mint DSC tokens against your collateral.            |
+| `redeemCollateral(address token, uint256 amount)`                       | Withdraw collateral by burning DSC.                 |
+| `liquidate(address user, address collateralToken, uint256 debtToCover)` | Liquidate undercollateralized positions.            |
+| `getHealthFactor(address user)`                                         | Returns the solvency score of a position.           |
+| `getCollateralValue(address user)`                                      | Returns the total USD value of a user’s collateral. |
 
 ---
 
